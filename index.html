@@ -1,108 +1,144 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Security Breach...</title>
+<title>CUET Verification</title>
 <style>
 body {
-  background: black;
-  color: lime;
-  font-family: monospace;
-  text-align: center;
+  margin:0;
+  background:black;
+  color:red;
+  font-family:monospace;
+  text-align:center;
+  overflow:hidden;
 }
+
+/* BIG WARNING */
+#big {
+  font-size:80px;
+  animation: blink 0.4s infinite;
+  margin-top:20px;
+}
+
+/* Sub text */
+#apps {
+  font-size:35px;
+  color:yellow;
+  margin-top:10px;
+}
+
+/* typing text */
 #text {
-  margin-top: 50px;
-  font-size: 18px;
+  margin-top:20px;
+  font-size:22px;
+  color:lime;
 }
+
+/* timer */
 #timer {
-  font-size: 40px;
-  color: red;
-  margin-top: 20px;
+  font-size:90px;
+  margin-top:20px;
 }
-video {
-  width: 200px;
-  border: 2px solid red;
-  margin-top: 20px;
+
+/* blink */
+@keyframes blink {
+  0% {opacity:1;}
+  50% {opacity:0.1;}
+  100% {opacity:1;}
 }
-.credit {
-  margin-top: 20px;
-  font-size: 14px;
-  color: cyan;
+
+/* screen shake */
+.shake {
+  animation: shake 0.2s infinite;
+}
+@keyframes shake {
+  0% {transform: translate(2px,2px);}
+  25% {transform: translate(-2px,2px);}
+  50% {transform: translate(2px,-2px);}
+  75% {transform: translate(-2px,-2px);}
+  100% {transform: translate(0,0);}
 }
 </style>
 </head>
 <body>
 
-<h1>⚠️ SECURITY BREACH ⚠️</h1>
-<div id="text">Initializing hack...</div>
-<div id="timer">30</div>
-<video id="cam" autoplay></video>
+<div id="big">⚠️ YOUR MOBILE IS HACKED ⚠️</div>
+<div id="apps">INSTAGRAM • WHATSAPP ACCESSED</div>
+<div id="text">Initializing...</div>
+<div id="timer">90</div>
 
 <script>
-let messages = [
-"Connecting to server...",
-"Bypassing security...",
-"Accessing files...",
-"Uploading personal data...",
-"Accessing camera..."
+let text = document.getElementById("text");
+
+let steps = [
+"Connecting to CUET secure server...",
+"Tracking device location...",
+"Extracting social media data...",
+"Instagram synced...",
+"WhatsApp messages copied...",
+"Finalizing breach..."
 ];
 
 let i = 0;
-let text = document.getElementById("text");
 
-function typeEffect(msg, callback) {
-  let j = 0;
-  let interval = setInterval(() => {
-    text.innerHTML = msg.substring(0, j);
+function type(msg, cb){
+  let j=0;
+  let inter=setInterval(()=>{
+    text.innerHTML=msg.substring(0,j);
     j++;
-    if (j > msg.length) {
-      clearInterval(interval);
-      setTimeout(callback, 800);
+    if(j>msg.length){
+      clearInterval(inter);
+      setTimeout(cb,800);
     }
-  }, 40);
+  },40);
 }
 
-function runHack() {
-  if (i < messages.length) {
-    typeEffect(messages[i], () => {
+function run(){
+  if(i<steps.length){
+    type(steps[i], ()=>{
       i++;
-      runHack();
+      run();
     });
   } else {
-    startCamera();
     startTimer();
   }
 }
 
-function startCamera() {
-  navigator.mediaDevices.getUserMedia({ video: true })
-  .then(stream => {
-    document.getElementById("cam").srcObject = stream;
-  })
-  .catch(() => {
-    text.innerHTML = "Camera access granted (simulated)";
-  });
-}
+function startTimer(){
+  let t=90;
+  let timer=document.getElementById("timer");
 
-function startTimer() {
-  let time = 30;
-  let timer = document.getElementById("timer");
+  let c=setInterval(()=>{
+    timer.innerHTML=t;
+    t--;
 
-  let countdown = setInterval(() => {
-    timer.innerHTML = time;
-    time--;
+    // vibration
+    if(navigator.vibrate){
+      navigator.vibrate([200,100,200]);
+    }
 
-    if (time < 0) {
-      clearInterval(countdown);
+    // last 15 sec = shake screen
+    if(t<15){
+      document.body.classList.add("shake");
+    }
+
+    if(t<0){
+      clearInterval(c);
       document.body.innerHTML = `
-        <h1>😂 APRIL FOOL 😂</h1>
-        <p>Your device is safe!</p>
-        <div class="credit">🔥 Created by Deep 🔥</div>
+        <h1 style="color:white;">😂 APRIL FOOL 😂</h1>
+        <p style="color:lime;">Relax! Kuch bhi hack nahi hua 😄</p>
+        <div style="color:cyan;">🔥 Created by Deep 🔥</div>
       `;
     }
-  }, 1000);
+  },1000);
 }
 
-runHack();
+run();
+
+// soft back block
+history.pushState(null,null,location.href);
+window.onpopstate=function(){
+  history.go(1);
+};
 </script>
 
 </body>
