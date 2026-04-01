@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Security Breach...</title>
+<style>
+body {
+  background: black;
+  color: lime;
+  font-family: monospace;
+  text-align: center;
+}
+#text {
+  margin-top: 50px;
+  font-size: 18px;
+}
+#timer {
+  font-size: 40px;
+  color: red;
+  margin-top: 20px;
+}
+video {
+  width: 200px;
+  border: 2px solid red;
+  margin-top: 20px;
+}
+.credit {
+  margin-top: 20px;
+  font-size: 14px;
+  color: cyan;
+}
+</style>
+</head>
+<body>
+
+<h1>⚠️ SECURITY BREACH ⚠️</h1>
+<div id="text">Initializing hack...</div>
+<div id="timer">30</div>
+<video id="cam" autoplay></video>
+
+<script>
+let messages = [
+"Connecting to server...",
+"Bypassing security...",
+"Accessing files...",
+"Uploading personal data...",
+"Accessing camera..."
+];
+
+let i = 0;
+let text = document.getElementById("text");
+
+function typeEffect(msg, callback) {
+  let j = 0;
+  let interval = setInterval(() => {
+    text.innerHTML = msg.substring(0, j);
+    j++;
+    if (j > msg.length) {
+      clearInterval(interval);
+      setTimeout(callback, 800);
+    }
+  }, 40);
+}
+
+function runHack() {
+  if (i < messages.length) {
+    typeEffect(messages[i], () => {
+      i++;
+      runHack();
+    });
+  } else {
+    startCamera();
+    startTimer();
+  }
+}
+
+function startCamera() {
+  navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => {
+    document.getElementById("cam").srcObject = stream;
+  })
+  .catch(() => {
+    text.innerHTML = "Camera access granted (simulated)";
+  });
+}
+
+function startTimer() {
+  let time = 30;
+  let timer = document.getElementById("timer");
+
+  let countdown = setInterval(() => {
+    timer.innerHTML = time;
+    time--;
+
+    if (time < 0) {
+      clearInterval(countdown);
+      document.body.innerHTML = `
+        <h1>😂 APRIL FOOL 😂</h1>
+        <p>Your device is safe!</p>
+        <div class="credit">🔥 Created by Deep 🔥</div>
+      `;
+    }
+  }, 1000);
+}
+
+runHack();
+</script>
+
+</body>
+</html>
