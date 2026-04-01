@@ -2,36 +2,69 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CUET Security Check</title>
+<title>CUET Secure System</title>
+
 <style>
 body{
   margin:0;
   background:black;
-  color:red;
+  color:#0f0;
   font-family:monospace;
-  text-align:center;
   overflow:hidden;
 }
 
-/* big text */
-#big{
-  font-size:80px;
-  margin-top:50px;
-  animation:blink 0.3s infinite;
+/* MATRIX */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:-1;
 }
 
-/* text */
-#text{
-  font-size:22px;
+/* container */
+#container{
+  text-align:center;
+  margin-top:40px;
+}
+
+/* glitch text */
+#alert{
+  font-size:70px;
+  color:red;
+  animation:glitch 0.3s infinite;
+}
+
+@keyframes glitch{
+  0%{text-shadow:2px 2px red;}
+  50%{text-shadow:-2px -2px blue;}
+  100%{text-shadow:2px 2px red;}
+}
+
+/* terminal */
+#terminal{
   margin-top:20px;
-  color:lime;
+  font-size:18px;
+  white-space:pre-line;
+}
+
+/* progress */
+#bar{
+  width:80%;
+  height:20px;
+  border:2px solid red;
+  margin:20px auto;
+}
+#fill{
+  height:100%;
+  width:0%;
+  background:red;
 }
 
 /* buttons */
 button{
   padding:15px 30px;
   font-size:20px;
-  margin:15px;
+  margin:10px;
   border:none;
   border-radius:5px;
   cursor:pointer;
@@ -40,15 +73,9 @@ button{
 .yes{background:green;color:white;}
 .no{background:red;color:white;}
 
-@keyframes blink{
-  0%{opacity:1;}
-  50%{opacity:0.2;}
-  100%{opacity:1;}
-}
-
 /* shake */
 .shake{
-  animation:shake 0.2s infinite;
+  animation:shake 0.1s infinite;
 }
 @keyframes shake{
   0%{transform:translate(3px,3px);}
@@ -59,26 +86,103 @@ button{
 }
 </style>
 </head>
+
 <body>
 
-<div id="big">⚠️ DEVICE SECURITY ALERT ⚠️</div>
+<canvas id="matrix"></canvas>
 
-<div id="text">
-Suspicious activity detected.<br>
-Instagram & WhatsApp accessed.<br><br>
-Do you accept security verification?
-</div>
+<div id="container">
+  <div id="alert">⚠️ SYSTEM BREACH ⚠️</div>
+  <div id="terminal"></div>
 
-<div>
-  <button class="yes" onclick="yes()">YES</button>
-  <button class="no" onclick="no()">NO</button>
+  <div id="bar"><div id="fill"></div></div>
+
+  <div id="buttons" style="display:none;">
+    <p>Do you accept security verification?</p>
+    <button class="yes" onclick="yes()">YES</button>
+    <button class="no" onclick="no()">NO</button>
+  </div>
 </div>
 
 <script>
-// vibration
+// MATRIX EFFECT
+let canvas=document.getElementById("matrix");
+let ctx=canvas.getContext("2d");
+
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+
+let letters="01CUETSECURITY";
+letters=letters.split("");
+
+let fontSize=14;
+let columns=canvas.width/fontSize;
+
+let drops=[];
+for(let x=0;x<columns;x++) drops[x]=1;
+
+function draw(){
+  ctx.fillStyle="rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle="#0f0";
+  ctx.font=fontSize+"px monospace";
+
+  for(let i=0;i<drops.length;i++){
+    let text=letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+    if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
+      drops[i]=0;
+
+    drops[i]++;
+  }
+}
+setInterval(draw,33);
+
+// TERMINAL TYPING
+let terminal=document.getElementById("terminal");
+let fill=document.getElementById("fill");
+
+let lines=[
+"Connecting to CUET server...",
+"Bypassing firewall...",
+"Accessing database...",
+"Extracting Instagram data...",
+"Extracting WhatsApp chats...",
+"Tracking device...",
+"Uploading data..."
+];
+
+let i=0;
+
+function typeLine(){
+  if(i<lines.length){
+    let line=lines[i];
+    let j=0;
+
+    let interval=setInterval(()=>{
+      terminal.innerHTML+=line[j]||"";
+      j++;
+
+      if(j>line.length){
+        clearInterval(interval);
+        terminal.innerHTML+="\n";
+        i++;
+        fill.style.width=(i/lines.length*100)+"%";
+        setTimeout(typeLine,400);
+      }
+    },25);
+  } else {
+    document.getElementById("buttons").style.display="block";
+  }
+}
+typeLine();
+
+// VIBRATION
 function vibrate(){
   if(navigator.vibrate){
-    navigator.vibrate([300,100,300]);
+    navigator.vibrate([200,100,200]);
   }
 }
 
@@ -86,11 +190,10 @@ function vibrate(){
 function yes(){
   vibrate();
   document.body.innerHTML=`
-    <h1 style="color:lime;font-size:60px;margin-top:100px;">
+    <h1 style="color:lime;text-align:center;margin-top:20vh;font-size:60px;">
     ✅ YOU ARE SAFE
     </h1>
-    <p>You accepted verification 😄</p>
-    <div style="color:cyan;">🔥 Created by Deep 🔥</div>
+    <div style="color:cyan;text-align:center;">🔥 Created by Deep 🔥</div>
   `;
 }
 
@@ -99,22 +202,15 @@ function no(){
   vibrate();
   document.body.classList.add("shake");
   document.body.innerHTML=`
-    <h1 style="color:red;font-size:70px;animation:blink 0.2s infinite;">
-    ⚠️ SYSTEM BREACH ⚠️
+    <h1 style="color:red;text-align:center;font-size:70px;">
+    ⚠️ ACCESS RISK ⚠️
     </h1>
-    <p style="font-size:24px;">
-    Your device is at risk.<br>
+    <p style="text-align:center;font-size:22px;">
     Unauthorized access detected.
     </p>
-    <div style="color:cyan;">🔥 Created by Deep 🔥</div>
+    <div style="color:cyan;text-align:center;">🔥 Created by Deep 🔥</div>
   `;
 }
-
-// soft back block
-history.pushState(null,null,location.href);
-window.onpopstate=function(){
-  history.go(1);
-};
 </script>
 
 </body>
