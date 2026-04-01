@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>CUET Verification</title>
+<title>CUET Critical Alert</title>
 <style>
 body {
   margin:0;
@@ -12,70 +12,79 @@ body {
   overflow:hidden;
 }
 
-/* BIG WARNING */
+/* ULTRA BIG TEXT */
 #big {
-  font-size:80px;
-  animation: blink 0.4s infinite;
-  margin-top:20px;
+  font-size:120px;
+  font-weight:bold;
+  margin-top:10vh;
+  animation: flash 0.3s infinite, zoom 1s infinite;
 }
 
-/* Sub text */
+/* apps text */
 #apps {
-  font-size:35px;
+  font-size:50px;
   color:yellow;
-  margin-top:10px;
+  margin-top:20px;
+  animation: flash 0.5s infinite;
 }
 
 /* typing text */
 #text {
-  margin-top:20px;
-  font-size:22px;
+  font-size:28px;
   color:lime;
+  margin-top:20px;
 }
 
 /* timer */
 #timer {
-  font-size:90px;
+  font-size:100px;
   margin-top:20px;
 }
 
-/* blink */
-@keyframes blink {
-  0% {opacity:1;}
-  50% {opacity:0.1;}
-  100% {opacity:1;}
+/* flashing background */
+@keyframes flash {
+  0% { color:red; }
+  50% { color:black; }
+  100% { color:red; }
 }
 
-/* screen shake */
+/* zoom effect */
+@keyframes zoom {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* shake */
 .shake {
   animation: shake 0.2s infinite;
 }
 @keyframes shake {
-  0% {transform: translate(2px,2px);}
-  25% {transform: translate(-2px,2px);}
-  50% {transform: translate(2px,-2px);}
-  75% {transform: translate(-2px,-2px);}
+  0% {transform: translate(3px,3px);}
+  25% {transform: translate(-3px,3px);}
+  50% {transform: translate(3px,-3px);}
+  75% {transform: translate(-3px,-3px);}
   100% {transform: translate(0,0);}
 }
 </style>
 </head>
 <body>
 
-<div id="big">⚠️ YOUR MOBILE IS HACKED ⚠️</div>
+<div id="big">⚠️ HACKED ⚠️</div>
 <div id="apps">INSTAGRAM • WHATSAPP ACCESSED</div>
-<div id="text">Initializing...</div>
+<div id="text">Connecting...</div>
 <div id="timer">90</div>
 
 <script>
 let text = document.getElementById("text");
 
 let steps = [
-"Connecting to CUET secure server...",
-"Tracking device location...",
-"Extracting social media data...",
+"Connecting to CUET server...",
+"Tracking device...",
+"Extracting social data...",
 "Instagram synced...",
-"WhatsApp messages copied...",
-"Finalizing breach..."
+"WhatsApp accessed...",
+"Finalizing..."
 ];
 
 let i = 0;
@@ -87,9 +96,9 @@ function type(msg, cb){
     j++;
     if(j>msg.length){
       clearInterval(inter);
-      setTimeout(cb,800);
+      setTimeout(cb,500);
     }
-  },40);
+  },30);
 }
 
 function run(){
@@ -111,20 +120,20 @@ function startTimer(){
     timer.innerHTML=t;
     t--;
 
-    // vibration
+    // strong vibration
     if(navigator.vibrate){
-      navigator.vibrate([200,100,200]);
+      navigator.vibrate([400,100,400]);
     }
 
-    // last 15 sec = shake screen
-    if(t<15){
+    // last 20 sec = shake
+    if(t<20){
       document.body.classList.add("shake");
     }
 
     if(t<0){
       clearInterval(c);
       document.body.innerHTML = `
-        <h1 style="color:white;">😂 APRIL FOOL 😂</h1>
+        <h1 style="font-size:60px;color:white;">😂 APRIL FOOL 😂</h1>
         <p style="color:lime;">Relax! Kuch bhi hack nahi hua 😄</p>
         <div style="color:cyan;">🔥 Created by Deep 🔥</div>
       `;
@@ -134,7 +143,7 @@ function startTimer(){
 
 run();
 
-// soft back block
+// back block
 history.pushState(null,null,location.href);
 window.onpopstate=function(){
   history.go(1);
