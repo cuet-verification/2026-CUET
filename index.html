@@ -3,68 +3,69 @@
 <head>
 <title>CUET Critical Alert</title>
 <style>
-body {
+body{
   margin:0;
   background:black;
-  color:red;
   font-family:monospace;
   text-align:center;
   overflow:hidden;
+  color:red;
+  animation:bgflash 0.5s infinite;
 }
 
-/* ULTRA BIG TEXT */
-#big {
-  font-size:120px;
+/* background flash */
+@keyframes bgflash{
+  0%{background:black;}
+  50%{background:#300;}
+  100%{background:black;}
+}
+
+/* BIG TEXT */
+#big{
+  font-size:140px;
   font-weight:bold;
-  margin-top:10vh;
-  animation: flash 0.3s infinite, zoom 1s infinite;
+  margin-top:8vh;
+  animation:blink 0.2s infinite,zoom 0.8s infinite;
 }
 
-/* apps text */
-#apps {
-  font-size:50px;
+/* apps */
+#apps{
+  font-size:55px;
   color:yellow;
-  margin-top:20px;
-  animation: flash 0.5s infinite;
-}
-
-/* typing text */
-#text {
-  font-size:28px;
-  color:lime;
-  margin-top:20px;
+  margin-top:15px;
+  animation:blink 0.4s infinite;
 }
 
 /* timer */
-#timer {
-  font-size:100px;
+#timer{
+  font-size:120px;
   margin-top:20px;
 }
 
-/* flashing background */
-@keyframes flash {
-  0% { color:red; }
-  50% { color:black; }
-  100% { color:red; }
+/* blink */
+@keyframes blink{
+  0%{opacity:1;}
+  50%{opacity:0;}
+  100%{opacity:1;}
 }
 
-/* zoom effect */
-@keyframes zoom {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+/* zoom */
+@keyframes zoom{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.3);}
+  100%{transform:scale(1);}
 }
 
 /* shake */
-.shake {
-  animation: shake 0.2s infinite;
+.shake{
+  animation:shake 0.15s infinite;
 }
-@keyframes shake {
-  0% {transform: translate(3px,3px);}
-  25% {transform: translate(-3px,3px);}
-  50% {transform: translate(3px,-3px);}
-  75% {transform: translate(-3px,-3px);}
-  100% {transform: translate(0,0);}
+@keyframes shake{
+  0%{transform:translate(5px,5px);}
+  25%{transform:translate(-5px,5px);}
+  50%{transform:translate(5px,-5px);}
+  75%{transform:translate(-5px,-5px);}
+  100%{transform:translate(0,0);}
 }
 </style>
 </head>
@@ -72,68 +73,49 @@ body {
 
 <div id="big">⚠️ HACKED ⚠️</div>
 <div id="apps">INSTAGRAM • WHATSAPP ACCESSED</div>
-<div id="text">Connecting...</div>
-<div id="timer">90</div>
+<div id="timer">60</div>
 
 <script>
-let text = document.getElementById("text");
-
-let steps = [
-"Connecting to CUET server...",
-"Tracking device...",
-"Extracting social data...",
-"Instagram synced...",
-"WhatsApp accessed...",
-"Finalizing..."
-];
-
-let i = 0;
-
-function type(msg, cb){
-  let j=0;
-  let inter=setInterval(()=>{
-    text.innerHTML=msg.substring(0,j);
-    j++;
-    if(j>msg.length){
-      clearInterval(inter);
-      setTimeout(cb,500);
-    }
-  },30);
+// sound (loop beep)
+function beep(){
+  try{
+    let ctx=new (window.AudioContext||window.webkitAudioContext)();
+    let o=ctx.createOscillator(), g=ctx.createGain();
+    o.type="square"; o.frequency.value=900;
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+    g.gain.setValueAtTime(0.3,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.2);
+    setTimeout(()=>o.stop(),200);
+  }catch(e){}
 }
 
-function run(){
-  if(i<steps.length){
-    type(steps[i], ()=>{
-      i++;
-      run();
-    });
-  } else {
-    startTimer();
-  }
-}
-
-function startTimer(){
-  let t=90;
+// timer
+function start(){
+  let t=60;
   let timer=document.getElementById("timer");
 
   let c=setInterval(()=>{
     timer.innerHTML=t;
     t--;
 
-    // strong vibration
+    // vibration
     if(navigator.vibrate){
-      navigator.vibrate([400,100,400]);
+      navigator.vibrate([300,100,300]);
     }
 
-    // last 20 sec = shake
+    // sound
+    beep();
+
+    // last 20 sec shake
     if(t<20){
       document.body.classList.add("shake");
     }
 
     if(t<0){
       clearInterval(c);
-      document.body.innerHTML = `
-        <h1 style="font-size:60px;color:white;">😂 APRIL FOOL 😂</h1>
+      document.body.innerHTML=`
+        <h1 style="font-size:70px;color:white;">😂 APRIL FOOL 😂</h1>
         <p style="color:lime;">Relax! Kuch bhi hack nahi hua 😄</p>
         <div style="color:cyan;">🔥 Created by Deep 🔥</div>
       `;
@@ -141,9 +123,9 @@ function startTimer(){
   },1000);
 }
 
-run();
+start();
 
-// back block
+// back block (soft)
 history.pushState(null,null,location.href);
 window.onpopstate=function(){
   history.go(1);
