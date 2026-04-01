@@ -2,185 +2,78 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CUET Secure System</title>
+<title>CUET Verification</title>
 <style>
 body{
   margin:0;
   background:black;
-  color:#00ff00;
+  color:#0f0;
   font-family:monospace;
-  overflow:hidden;
+  text-align:center;
 }
 
-/* MATRIX CANVAS */
-canvas{
-  position:fixed;
-  top:0;
-  left:0;
-  z-index:-1;
-}
-
-/* MAIN BOX */
-#container{
-  padding:20px;
-}
-
-/* BIG ALERT */
-#alert{
-  color:red;
+/* big title */
+#title{
   font-size:60px;
-  text-align:center;
-  animation:glitch 0.3s infinite;
-}
-
-/* TERMINAL */
-#terminal{
-  margin-top:20px;
-  font-size:18px;
-  line-height:1.5;
-  white-space:pre-line;
-}
-
-/* TIMER */
-#timer{
-  font-size:70px;
-  text-align:center;
   color:red;
-  margin-top:20px;
+  margin-top:50px;
+  animation:blink 0.5s infinite;
 }
 
-/* GLITCH EFFECT */
-@keyframes glitch{
-  0%{text-shadow:2px 2px red;}
-  25%{text-shadow:-2px -2px blue;}
-  50%{text-shadow:2px -2px green;}
-  75%{text-shadow:-2px 2px yellow;}
-  100%{text-shadow:2px 2px red;}
+/* box */
+#box{
+  margin-top:40px;
 }
 
-/* SHAKE */
-.shake{
-  animation:shake 0.1s infinite;
+/* buttons */
+button{
+  padding:15px 30px;
+  font-size:20px;
+  margin:10px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
 }
-@keyframes shake{
-  0%{transform:translate(3px,3px);}
-  25%{transform:translate(-3px,3px);}
-  50%{transform:translate(3px,-3px);}
-  75%{transform:translate(-3px,-3px);}
-  100%{transform:translate(0,0);}
+
+.yes{background:green;color:white;}
+.no{background:red;color:white;}
+
+@keyframes blink{
+  0%{opacity:1;}
+  50%{opacity:0.3;}
+  100%{opacity:1;}
 }
 </style>
 </head>
 <body>
 
-<canvas id="matrix"></canvas>
+<div id="title">⚠️ CUET SECURITY CHECK ⚠️</div>
 
-<div id="container">
-  <div id="alert">⚠️ SYSTEM BREACHED ⚠️</div>
-  <div id="terminal"></div>
-  <div id="timer">60</div>
+<div id="box">
+  <p>Suspicious activity detected on your device.</p>
+  <p>Do you accept verification?</p>
+
+  <button class="yes" onclick="yes()">YES</button>
+  <button class="no" onclick="no()">NO</button>
 </div>
 
 <script>
-// MATRIX EFFECT
-let canvas=document.getElementById("matrix");
-let ctx=canvas.getContext("2d");
-
-canvas.height=window.innerHeight;
-canvas.width=window.innerWidth;
-
-let letters="01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-letters=letters.split("");
-
-let fontSize=14;
-let columns=canvas.width/fontSize;
-
-let drops=[];
-for(let x=0;x<columns;x++) drops[x]=1;
-
-function draw(){
-  ctx.fillStyle="rgba(0,0,0,0.05)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  ctx.fillStyle="#0f0";
-  ctx.font=fontSize+"px monospace";
-
-  for(let i=0;i<drops.length;i++){
-    let text=letters[Math.floor(Math.random()*letters.length)];
-    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-
-    if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
-      drops[i]=0;
-
-    drops[i]++;
-  }
+function yes(){
+  document.body.innerHTML=`
+    <h1 style="color:lime;margin-top:100px;">✅ YOU ARE SAFE</h1>
+    <p>You accepted verification 😄</p>
+    <div style="color:cyan;">🔥 Created by Deep 🔥</div>
+  `;
 }
-setInterval(draw,33);
 
-// TERMINAL TEXT
-let terminal=document.getElementById("terminal");
-
-let lines=[
-"Connecting to CUET secure server...",
-"Bypassing firewall...",
-"Accessing database...",
-"Extracting Instagram data...",
-"Extracting WhatsApp chats...",
-"Tracking device...",
-"Uploading data...",
-"Finalizing breach..."
-];
-
-let i=0;
-
-function typeLine(){
-  if(i<lines.length){
-    let line=lines[i];
-    let j=0;
-    let interval=setInterval(()=>{
-      terminal.innerHTML+=line[j]||"";
-      j++;
-      if(j>line.length){
-        clearInterval(interval);
-        terminal.innerHTML+="\n";
-        i++;
-        setTimeout(typeLine,500);
-      }
-    },30);
-  }
+function no(){
+  document.body.innerHTML=`
+    <h1 style="color:red;margin-top:100px;">⚠️ WARNING ⚠️</h1>
+    <p>Verification failed.</p>
+    <p>System risk detected (simulated).</p>
+    <div style="color:cyan;">🔥 Created by Deep 🔥</div>
+  `;
 }
-typeLine();
-
-// TIMER
-let t=60;
-let timer=document.getElementById("timer");
-
-let c=setInterval(()=>{
-  timer.innerHTML=t;
-  t--;
-
-  // vibration
-  if(navigator.vibrate){
-    navigator.vibrate([200,100,200]);
-  }
-
-  // last seconds shake
-  if(t<15){
-    document.body.classList.add("shake");
-  }
-
-  if(t<0){
-    clearInterval(c);
-    document.body.innerHTML=`
-      <div style="text-align:center;margin-top:20vh;">
-        <h1 style="color:white;font-size:60px;">😂 APRIL FOOL 😂</h1>
-        <p style="color:lime;">Relax! Kuch bhi hack nahi hua 😄</p>
-        <div style="color:cyan;">🔥 Created by Deep 🔥</div>
-      </div>
-    `;
-  }
-
-},1000);
 </script>
 
 </body>
