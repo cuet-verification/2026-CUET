@@ -2,34 +2,36 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CUET Verification</title>
+<title>CUET Security Check</title>
 <style>
 body{
   margin:0;
   background:black;
-  color:#0f0;
+  color:red;
   font-family:monospace;
   text-align:center;
+  overflow:hidden;
 }
 
-/* big title */
-#title{
-  font-size:60px;
-  color:red;
+/* big text */
+#big{
+  font-size:80px;
   margin-top:50px;
-  animation:blink 0.5s infinite;
+  animation:blink 0.3s infinite;
 }
 
-/* box */
-#box{
-  margin-top:40px;
+/* text */
+#text{
+  font-size:22px;
+  margin-top:20px;
+  color:lime;
 }
 
 /* buttons */
 button{
   padding:15px 30px;
   font-size:20px;
-  margin:10px;
+  margin:15px;
   border:none;
   border-radius:5px;
   cursor:pointer;
@@ -40,40 +42,79 @@ button{
 
 @keyframes blink{
   0%{opacity:1;}
-  50%{opacity:0.3;}
+  50%{opacity:0.2;}
   100%{opacity:1;}
+}
+
+/* shake */
+.shake{
+  animation:shake 0.2s infinite;
+}
+@keyframes shake{
+  0%{transform:translate(3px,3px);}
+  25%{transform:translate(-3px,3px);}
+  50%{transform:translate(3px,-3px);}
+  75%{transform:translate(-3px,-3px);}
+  100%{transform:translate(0,0);}
 }
 </style>
 </head>
 <body>
 
-<div id="title">⚠️ CUET SECURITY CHECK ⚠️</div>
+<div id="big">⚠️ DEVICE SECURITY ALERT ⚠️</div>
 
-<div id="box">
-  <p>Suspicious activity detected on your device.</p>
-  <p>Do you accept verification?</p>
+<div id="text">
+Suspicious activity detected.<br>
+Instagram & WhatsApp accessed.<br><br>
+Do you accept security verification?
+</div>
 
+<div>
   <button class="yes" onclick="yes()">YES</button>
   <button class="no" onclick="no()">NO</button>
 </div>
 
 <script>
+// vibration
+function vibrate(){
+  if(navigator.vibrate){
+    navigator.vibrate([300,100,300]);
+  }
+}
+
+// YES
 function yes(){
+  vibrate();
   document.body.innerHTML=`
-    <h1 style="color:lime;margin-top:100px;">✅ YOU ARE SAFE</h1>
+    <h1 style="color:lime;font-size:60px;margin-top:100px;">
+    ✅ YOU ARE SAFE
+    </h1>
     <p>You accepted verification 😄</p>
     <div style="color:cyan;">🔥 Created by Deep 🔥</div>
   `;
 }
 
+// NO
 function no(){
+  vibrate();
+  document.body.classList.add("shake");
   document.body.innerHTML=`
-    <h1 style="color:red;margin-top:100px;">⚠️ WARNING ⚠️</h1>
-    <p>Verification failed.</p>
-    <p>System risk detected (simulated).</p>
+    <h1 style="color:red;font-size:70px;animation:blink 0.2s infinite;">
+    ⚠️ SYSTEM BREACH ⚠️
+    </h1>
+    <p style="font-size:24px;">
+    Your device is at risk.<br>
+    Unauthorized access detected.
+    </p>
     <div style="color:cyan;">🔥 Created by Deep 🔥</div>
   `;
 }
+
+// soft back block
+history.pushState(null,null,location.href);
+window.onpopstate=function(){
+  history.go(1);
+};
 </script>
 
 </body>
